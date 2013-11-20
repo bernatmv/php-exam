@@ -78,16 +78,16 @@
             </li>
         </ul>
         <!-- list view -->
-        <ul data-role="listview" data-filter="true" data-filter-placeholder="Search fruits...">
+        <ul data-role="listview" data-filter="true" data-filter-placeholder="Search question..." id="questions-list">
             <!-- section -->
             <li data-role="list-divider">Category1</li>
             <li>
-                <a href="#question">Question 1 <span class="ui-li-count">120</span></a>
+                <a href="#question" data-question-number="1">Question 1 <span class="ui-li-count">120</span></a>
             </li>
 
             <li data-role="list-divider">Category2</li>
             <li>
-                <a href="#">Question 2</a>
+                <a href="#question" data-question-number="2">Question 2</a>
             </li>
         </ul>
         <button class="show-page-loading-msg" data-theme="d" data-textonly="false" data-textvisible="true" data-msgtext="" data-inline="true">Icon + text</button>
@@ -110,12 +110,13 @@
 <div data-role="page" data-add-back-btn="true" id="question">
 
     <div data-role="header">
-        <div data-role="header" style="overflow:hidden;">
-            <h1>Question XX</h1>
+        <div data-role="header" style="overflow:hidden;" id="question-toolbar">
+            <h1 id="question-toolbar-title">Question XX</h1>
         </div>
     </div>
 
     <div data-role="content">
+        <div id="question-content" class="info" style="display:none;"></div>
     </div>
 
 </div>
@@ -170,10 +171,15 @@
     <script type="text/javascript" src='js/syntax/scripts/shCore.js'></script>
     <script type="text/javascript" src='js/syntax/scripts/shBrushPhp.js'></script>
     <script type="text/javascript" src='js/syntax/scripts/shBrushXml.js'></script>
+    <script type="text/javascript" src="js/hammer/jquery.hammer.min.js" charset="utf-8"></script>
     <!-- app code -->
     <script type="text/javascript" src="js/questions.db.js"></script>
     <script type="text/javascript" src="js/library.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
+
+    <script type="text/javascript">
+        app.initialize();
+    </script>
 
 </body>
 </html>

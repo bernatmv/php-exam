@@ -1,3 +1,5 @@
+// $.mobile.changePage($("#pagequesigui"), "none");
+
 // config data
 var BOOKMARK = localStorage.getItem("PHPEXAM_BOOKMARK");
 var BOOKMARK_ID = localStorage.getItem("PHPEXAM_BOOKMARK_ID");
@@ -14,17 +16,21 @@ var CAT_STRINGS = 6;
 var CAT_DB = 7;
 var CAT_ARRAYS = 8;
 var CAT_PHP4 = 9;
+var CAT_BASIC_TITLE = "PHP basic questions";
+var CAT_WEB_TITLE = "Web questions";
+var CAT_OOP_TITLE = "OOP questions";
+var CAT_SECURITY_TITLE = "Security questions";
+var CAT_DATA_TITLE = "Data types questions";
+var CAT_IO_TITLE = "IO questions";
+var CAT_STRINGS_TITLE = "String questions";
+var CAT_DB_TITLE = "Database questions";
+var CAT_ARRAYS_TITLE = "Array questions";
+var CAT_PHP4_TITLE = "PHP4 questions";
 
 // modes
 var MODE_ALL_MINUS_PHP4 = 0; // default, all except PHP4;
 var MODE_ALL = 1; // all;
 var MODE_CATEGORY = 2; // showing one category
-
-// jqTouch
-$.jQTouch({
-    statusBar: 'black-translucent',
-    preloadImages: []
-});
 
 // version
 var VERSION = "PRO";
@@ -48,13 +54,13 @@ var app = {
 
     onDeviceReady: function() {
         // control inclusion of PHP4 questions
-        $('input#php4-questions').on('change', function (e) {
-            if ($(this).is(':checked')) app.changeMode(indexNormalizedPHP4, MODE_ALL);
+        $('#include-php4-option').on('change', function (e) {
+            if ($(this).val() === "on") app.changeMode(indexNormalizedPHP4, MODE_ALL);
             else app.changeMode(indexNormalized, MODE_ALL_MINUS_PHP4)
         });
 
         // control filtering of questions
-        $('select#choose-category-select').on('change', function (e) {
+        $('#choose-category-select').on('change', function (e) {
             var filter = $(this).val();
             if (filter == 0) app.changeMode(indexNormalized, MODE_ALL_MINUS_PHP4);
             if (filter == 1) app.changeMode(indexNormalizedPHP4, MODE_ALL);
@@ -67,7 +73,7 @@ var app = {
         // build questions links
         app.buildQuestions(BOOKMARK);
         // build questions pagination
-        app.buildQuestionsPagination();
+        //app.buildQuestionsPagination();
         // set bookmark
         app.buildBookmarkQuestion();
 
@@ -83,22 +89,13 @@ var app = {
             app.buildBookmarkQuestion();
         });
 
-        // about button        
-        $("#infoButton").hammer().on("tap", function (e) {      
-            jQT.goTo($('#about'), 'slideup');
-        });
-
-        $("#aboutClose").hammer().on("tap", function (e) {
-            jQT.goBack('#home');
-        });
-
         // if we are reloading a question
         if (window.location.hash) {
             app.goToQuestion(LAST_QUESTION_SEEN);
         }
 
         // random question
-        $("#random-question-link").hammer().on("tap", function (e) {
+        $("#random-question").hammer().on("tap", function (e) {
             var questionNumber = randomFromInterval(1, (index.length -1));
             app.goToQuestion(questionNumber);
         });
@@ -107,15 +104,15 @@ var app = {
     setQuestionTitle: function(title, qId) {
         $("#page-bookmark").remove();
         $("#bookmark-button").remove();
-        $('#question .toolbar h1').html(title);
+        $('#question-toolbar-title').html(title);
 
         if ( qId && (app.mode == MODE_ALL_MINUS_PHP4 || app.mode == MODE_ALL) ) {
             if ( qId == BOOKMARK_ID ) {
-                $('#question .toolbar').append('<div id="page-bookmark"></div>');
+                $('#question-toolbar').append('<div id="page-bookmark"></div>');
             }
             else {
-                if ( !$('#question .toolbar #bookmark-button').length ) {
-                    $('#question .toolbar').append('<a class="button" id="bookmark-button" href="#"><img src="img/bookmark_v5.png" /><div>flag</div></a>');
+                if ( !$('#question-toolbar #bookmark-button').length ) {
+                    $('#question-toolbar').append('<a class="button" id="bookmark-button" href="#"><img src="img/bookmark_v5.png" /><div>flag</div></a>');
                 }
             }
         }
@@ -144,9 +141,9 @@ var app = {
 
     buildQuestions: function(from, stepBack, stepForward) {
         from = from || 1;
-        var html, qid;
-        stepBack = typeof stepBack !== "undefined" ? stepBack : 4;
-        stepForward = typeof stepForward !== "undefined" ? stepForward : 5;
+        var html, qid, catId;
+        stepBack = typeof stepBack !== "undefined" ? stepBack : 0;
+        stepForward = typeof stepForward !== "undefined" ? stepForward : 250;
         var prev = ( ( from - stepBack ) > 0 ) ? (from - stepBack) : 1;
         var next = ( ( prev + stepBack + stepForward ) >= app.numQuestions ) ? app.numQuestions : ( prev + stepBack + stepForward );
 
@@ -154,23 +151,58 @@ var app = {
         for (var i = 1; i < index.length; i++) {
             if ( i && ( i >= prev ) && ( i <= next) ) {
                 qid = app.questionIdFromNumber(i);
-                html = '<li class="arrow">' +
-                    '<a href="#question" data-question-number="'+i+'" class="slide question-token">' +
-                    'Question '+i+
-                    ((qid == BOOKMARK_ID && (app.mode == MODE_ALL_MINUS_PHP4 || app.mode == MODE_ALL)) ? '<div class="bookmark"></div>' : '') +
-                    (localStorage.getItem("PHPEXAM_QUESTION_"+qid) ? '<small class="counter">DONE</small>' : '') +
+                catId = this.isFirstElement(qid);
+                html = (catId >= 0) ? '<li data-role="list-divider">'+this.getCategoryName(catId)+'</li>' : '';
+                html += '<li>' +
+                    '<a href="#question" data-question-number="'+i+'" class="question-token">' +
+                        'Question '+i+
+                        ((qid == BOOKMARK_ID && (app.mode == MODE_ALL_MINUS_PHP4 || app.mode == MODE_ALL)) ? '<div class="bookmark"></div>' : '') +
+                        (localStorage.getItem("PHPEXAM_QUESTION_"+qid) ? '<span class="ui-li-count">DONE</span>' : '') +
                     '</a></li>';
-                $("#questions-list").append(html);
+                $("#questions-list").append(html).listview( "refresh" );
             }
         }
 
         // write loading, show and load question
         $('.question-token').hammer().on("tap", function (e) {
             var questionNumber = this.getAttribute('data-question-number');
-
             app.goToQuestion(questionNumber);
         });
 
+    },
+
+    isFirstElement: function(qId) {
+        for (var i = 0, l = category.length; i < l; i++) {
+            if (category[i][1] == qId) return i
+        }
+        return -1
+    },
+
+    getCategoryName: function(cat) {
+        switch (cat) {
+            case 0: return CAT_BASIC_TITLE;
+                    break;
+            case 1: return CAT_WEB_TITLE;
+                break;
+            case 2: return CAT_OOP_TITLE;
+                break;
+            case 3: return CAT_SECURITY_TITLE;
+                break;
+            case 4: return CAT_DATA_TITLE;
+                break;
+            case 5: return CAT_IO_TITLE;
+                break;
+            case 6: return CAT_STRINGS_TITLE;
+                break;
+            case 7: return CAT_DB_TITLE;
+                break;
+            case 8: return CAT_ARRAYS_TITLE;
+                break;
+            case 9: return CAT_PHP4_TITLE;
+                break;
+            default: return '';
+                    break;
+        }
     },
 
     buildQuestionsPagination: function() {
@@ -217,7 +249,7 @@ var app = {
         localStorage.setItem('PHPEXAM_BOOKMARK_ID', qid);
 
         el.remove();
-        $('#question .toolbar').append('<div id="page-bookmark"></div>');
+        $('#question-toolbar').append('<div id="page-bookmark"></div>');
     },
 
     setLastQuestionSeen: function (qnum) {

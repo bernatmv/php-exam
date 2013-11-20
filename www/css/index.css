@@ -7,6 +7,11 @@
     height: 34px;
 }
 
+.choose-category-select-label {
+    margin-top: 11px !important;
+    width: auto !important;
+}
+
 .include-php4-option label {
     margin-top: 7px !important;
     width: auto !important;
