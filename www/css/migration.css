@@ -1,0 +1,25 @@
+#about .about-content {
+    padding: 40px;
+    text-align: center;
+}
+
+.syntaxhighlighter {
+    padding: 5px !important;
+    border: 1px solid #333 !important;
+}
+
+.app-credits {
+    font-size: .9em;
+}
+
+.syntaxhighlighter .toolbar {
+    display: none !important;
+}
+
+#about {
+    background: white;
+}
+
+#about li {
+    width: 100%;
+}
