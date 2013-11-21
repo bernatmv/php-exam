@@ -20,3 +20,17 @@
 .include-php4-option > div {
     float: right;
 }
+
+#questions-pagination {
+    margin-top: 2em;
+    text-align: center;
+}
+
+#questions-pagination a {
+    width: 130px !important;
+}
+
+#questions-pagination a#pagination-grid {
+    width: 60px !important;
+    height: 39px;
+}

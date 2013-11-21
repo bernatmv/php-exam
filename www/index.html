@@ -31,12 +31,6 @@
     </div>
 
     <div data-role="content">
-        <!--
-         data-inset="true"
-         data-divider-theme="d" data-count-theme="c"
-
-         <li data-icon="gear">
-        -->
         <ul data-role="listview" class="menu-options">
             <!-- options -->
             <li id="submit-question">
@@ -78,28 +72,16 @@
             </li>
         </ul>
         <!-- list view -->
-        <ul data-role="listview" data-filter="true" data-filter-placeholder="Search question..." id="questions-list">
-            <!-- section -->
-            <li data-role="list-divider">Category1</li>
-            <li>
-                <a href="#question" data-question-number="1">Question 1 <span class="ui-li-count">120</span></a>
-            </li>
-
-            <li data-role="list-divider">Category2</li>
-            <li>
-                <a href="#question" data-question-number="2">Question 2</a>
-            </li>
+        <!-- data-filter="true" data-filter-placeholder="Search question..." -->
+        <ul data-role="listview" id="questions-list">
         </ul>
-        <button class="show-page-loading-msg" data-theme="d" data-textonly="false" data-textvisible="true" data-msgtext="" data-inline="true">Icon + text</button>
-    </div>
-
-    <div data-role="footer" data-id="foo1" data-position="fixed">
-        <div data-role="navbar">
-            <ul>
-                <li><a href="#" data-icon="grid">Summary</a></li>
-                <li><a href="#" data-icon="star" class="ui-btn-active">Favs</a></li>
-                <li><a href="#" data-icon="gear">Setup</a></li>
-            </ul>
+        <!-- pagination -->
+        <div id="questions-pagination">
+            <div data-role="controlgroup" data-type="horizontal">
+                <a href="#" data-role="button" data-icon="arrow-l" data-iconpos="left" id="pagination-previous">Previous</a>
+                <a href="#" data-role="button" data-iconpos="notext" data-icon="grid" id="pagination-grid"></a>
+                <a href="#" data-role="button" data-icon="arrow-r" data-iconpos="right" id="pagination-next">Next</a>
+            </div>
         </div>
     </div>
 
@@ -137,7 +119,7 @@
             <strong>PHP 5 Study Quiz</strong>
             <br />
             <p>
-                <em>Discover how many things you ignore about PHP!</em>
+                <em>Discover how many things you don't know about PHP!</em>
             </p>
             <br /><br /><br />
             <span style="font-size: .8em;">
@@ -171,7 +153,6 @@
     <script type="text/javascript" src='js/syntax/scripts/shCore.js'></script>
     <script type="text/javascript" src='js/syntax/scripts/shBrushPhp.js'></script>
     <script type="text/javascript" src='js/syntax/scripts/shBrushXml.js'></script>
-    <script type="text/javascript" src="js/hammer/jquery.hammer.min.js" charset="utf-8"></script>
     <!-- app code -->
     <script type="text/javascript" src="js/questions.db.js"></script>
     <script type="text/javascript" src="js/library.js"></script>
