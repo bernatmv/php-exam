@@ -290,7 +290,7 @@ var app = {
         for (var i = 0; i <= l; i++) {
             $('#choose-category-select').find('li[data-option-index="'+i+'"]').show()
         }
-        for (var j = l+1; j <= 25; j++) {
+        for (var j = l+1; j <= 28; j++) {
             $('#choose-page-select-menu').find('li[data-option-index="'+j+'"]').hide()
         }
     },
@@ -348,7 +348,7 @@ var app = {
     },
 
     questionIdFromIndex: function (index) {
-        return questionsDataBase[index].id;
+        return (questionsDataBase[index]) ? questionsDataBase[index].id : false;
     },
 
     questionNumberFromIndex: function (index) {

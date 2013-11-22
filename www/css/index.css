@@ -66,3 +66,117 @@ a#about {
     height: 345px !important;
 }
 
+/*** QUESTIONS ***/
+
+.question-number {
+    width: 5%;
+    float: left;
+}
+
+.question-text {
+    width: 95%;
+    text-align: left;
+}
+
+.question-answer {
+    text-align: left;
+    padding-top: 5px;
+}
+
+#question-comments {
+    width: 80%;
+    clear:both;
+    float: none;
+    background: white;
+    margin: 25px auto 40px auto;
+    padding: 10px 10px 10px 20px;
+    border: 1px solid #f2f2f2;
+    text-align: left;
+}
+
+#question-comments small {
+    margin-top: 10px;
+    font-weight: 400;
+    font-size: .8em;
+    line-height: 1.2em;
+}
+
+#question-comments p {
+    margin-top: 10px;
+    font-weight: 400;
+    font-size: 1.2em;
+    line-height: 1.3em;
+}
+
+.question-help {
+    width:90%;
+    font-size: .8em;
+}
+
+#question ul.individual > li {
+    width: 70% !important;
+    float: none !important;
+    display: block !important;
+    margin: 5px auto !important;
+}
+
+#question ul.individual > li > a {
+    margin: 0 auto !important;
+    width: 100% !important;
+    padding: 0 !important;
+}
+
+#about .about-content {
+    padding: 40px;
+    text-align: center;
+}
+
+.syntaxhighlighter {
+    padding: 5px !important;
+    border: 1px solid #333 !important;
+}
+
+.syntaxhighlighter .toolbar {
+    display: none !important;
+}
+
+.info {
+    text-shadow: none;
+}
+
+.question-answer input[type="text"] {
+    margin-bottom: 5px;
+    border-bottom: 1px dashed #ddd;
+}
+
+.question-answer input[type="text"].noborder {
+    border-bottom: none;
+}
+
+.question-hint #hintText {
+    font-size: 1.6em;
+    color: #55c;
+}
+
+.question-text {
+    font-size: 1.2em;
+    line-height: 1.3em;
+}
+
+.question-number {
+    width: 15px;
+    height: 15px;
+}
+
+.question-answer > .question-hint {
+    width: 150px;
+    height: 30px;
+    line-height: 30px;
+    vertical-align: middle;
+    text-align: center;
+    float: none;
+    margin: 10px auto -20px auto;
+    position: relative;
+    right: 0;
+    top: 0;
+}
