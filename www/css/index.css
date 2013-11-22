@@ -34,3 +34,35 @@
     width: 60px !important;
     height: 39px;
 }
+
+.select-questions-container {
+    text-align:center !important;
+}
+
+#questions-pagination a#choose-page-select-button {
+    width: 59px !important;
+    height: 39px !important;
+}
+
+a#about {
+    margin-top: 2px;
+}
+
+#choose-page-select-menu li {
+    width: 50px !important;
+    float: left !important;
+}
+
+#choose-page-select-menu li a {
+    text-align: center !important;
+}
+
+#choose-page-select-menu li[data-role="list-divider"] {
+    width: 170px !important;
+}
+
+#choose-page-select-menu {
+    width: 200px !important;
+    height: 345px !important;
+}
+

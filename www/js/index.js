@@ -1,9 +1,51 @@
 // $.mobile.changePage($("#pagequesigui"), "none");
 
 // config data
-var BOOKMARK = localStorage.getItem("PHPEXAM_BOOKMARK");
-var BOOKMARK_ID = localStorage.getItem("PHPEXAM_BOOKMARK_ID");
+var CURRENT_CATEGORY = 1;
+var BOOKMARK = {
+    CAT_0: localStorage.getItem("PHPEXAM_BOOKMARK_CAT_0"),
+    CAT_1: localStorage.getItem("PHPEXAM_BOOKMARK_CAT_1"),
+    CAT_20: localStorage.getItem("PHPEXAM_BOOKMARK_CAT_20"),
+    CAT_21: localStorage.getItem("PHPEXAM_BOOKMARK_CAT_21"),
+    CAT_22: localStorage.getItem("PHPEXAM_BOOKMARK_CAT_22"),
+    CAT_23: localStorage.getItem("PHPEXAM_BOOKMARK_CAT_23"),
+    CAT_24: localStorage.getItem("PHPEXAM_BOOKMARK_CAT_24"),
+    CAT_25: localStorage.getItem("PHPEXAM_BOOKMARK_CAT_25"),
+    CAT_26: localStorage.getItem("PHPEXAM_BOOKMARK_CAT_26"),
+    CAT_27: localStorage.getItem("PHPEXAM_BOOKMARK_CAT_27"),
+    CAT_28: localStorage.getItem("PHPEXAM_BOOKMARK_CAT_28"),
+    CAT_29: localStorage.getItem("PHPEXAM_BOOKMARK_CAT_29")
+};
+var BOOKMARK_ID = {
+    CAT_0: localStorage.getItem("PHPEXAM_BOOKMARK_ID_CAT_0"),
+    CAT_1: localStorage.getItem("PHPEXAM_BOOKMARK_ID_CAT_1"),
+    CAT_20: localStorage.getItem("PHPEXAM_BOOKMARK_ID_CAT_20"),
+    CAT_21: localStorage.getItem("PHPEXAM_BOOKMARK_ID_CAT_21"),
+    CAT_22: localStorage.getItem("PHPEXAM_BOOKMARK_ID_CAT_22"),
+    CAT_23: localStorage.getItem("PHPEXAM_BOOKMARK_ID_CAT_23"),
+    CAT_24: localStorage.getItem("PHPEXAM_BOOKMARK_ID_CAT_24"),
+    CAT_25: localStorage.getItem("PHPEXAM_BOOKMARK_ID_CAT_25"),
+    CAT_26: localStorage.getItem("PHPEXAM_BOOKMARK_ID_CAT_26"),
+    CAT_27: localStorage.getItem("PHPEXAM_BOOKMARK_ID_CAT_27"),
+    CAT_28: localStorage.getItem("PHPEXAM_BOOKMARK_ID_CAT_28"),
+    CAT_29: localStorage.getItem("PHPEXAM_BOOKMARK_ID_CAT_29")
+};
 var LAST_QUESTION_SEEN = localStorage.getItem("LAST_QUESTION_SEEN") || 1;
+
+function getBookmark() {
+    return BOOKMARK['CAT_'+CURRENT_CATEGORY];
+}
+
+function getBookmarkId() {
+    return BOOKMARK_ID['CAT_'+CURRENT_CATEGORY];
+}
+
+function setBookmark(num, id) {
+    BOOKMARK['CAT_'+CURRENT_CATEGORY] = num;
+    BOOKMARK_ID['CAT_'+CURRENT_CATEGORY] = id;
+    localStorage.setItem('PHPEXAM_BOOKMARK_CAT_'+CURRENT_CATEGORY, num);
+    localStorage.setItem('PHPEXAM_BOOKMARK_ID_CAT_'+CURRENT_CATEGORY, id);
+}
 
 // categories
 var CAT_BASIC = 0;
@@ -54,14 +96,17 @@ var app = {
 
     onDeviceReady: function() {
         // control inclusion of PHP4 questions
+/*
         $('#include-php4-option').on('change', function (e) {
             if ($(this).val() === "on") app.changeMode(indexNormalizedPHP4, MODE_ALL);
             else app.changeMode(indexNormalized, MODE_ALL_MINUS_PHP4)
         });
-
+*/
         // control filtering of questions
         $('#choose-category-select').on('change', function (e) {
             var filter = $(this).val();
+
+            CURRENT_CATEGORY = filter;
             if (filter == 0) app.changeMode(indexNormalized, MODE_ALL_MINUS_PHP4);
             if (filter == 1) app.changeMode(indexNormalizedPHP4, MODE_ALL);
             if (filter >= 20) {
@@ -70,32 +115,43 @@ var app = {
             }
         });
 
+        // control filtering of questions
+        $('#choose-page-select').on('change', function (e) {
+            var page = $(this).val();
+            app.buildQuestions( ((page * 10) + 1), 0, 9 );
+        });
+
         // build questions links
-        app.buildQuestions(BOOKMARK);
+        app.buildQuestions(getBookmark());
         // set bookmark
         app.buildBookmarkQuestion();
 
-        // hide question and re-write loading
-        $('.question-out').on("touchstart", function (e) {
-            app.setQuestionTitle('Loading...');
-
-            // rebuild questions list
-            var qid = $(".question-info").attr('qid');
-            var qNum = app.questionNumberFromId(qid);
-            app.buildQuestions(qNum);
-            // rebuild bookmark question
-            app.buildBookmarkQuestion();
-        });
-
+/*
         // if we are reloading a question
         if (window.location.hash) {
             app.goToQuestion(LAST_QUESTION_SEEN);
         }
-
+*/
         // random question
         $("#random-question").on("touchstart", function (e) {
             var questionNumber = randomFromInterval(1, (index.length -1));
             app.goToQuestion(questionNumber);
+        });
+
+        // bookmark question
+        $("#bookmark-question-container").on("touchstart", function (e) {
+            var bookmark = getBookmark()
+            if (bookmark) {
+                app.goToQuestion(bookmark);
+            }
+        });
+
+        // add-remove bookmark
+        $("#add-favorite").on("touchstart", function (e) {
+            app.addBookmark();
+        });
+        $("#remove-favorite").on("touchstart", function (e) {
+            app.removeBookmark();
         });
 
         // pagination
@@ -115,18 +171,16 @@ var app = {
     },
 
     setQuestionTitle: function(title, qId) {
-        $("#page-bookmark").remove();
-        $("#bookmark-button").remove();
         $('#question-toolbar-title').html(title);
 
-        if ( qId && (app.mode == MODE_ALL_MINUS_PHP4 || app.mode == MODE_ALL) ) {
-            if ( qId == BOOKMARK_ID ) {
-                $('#question-toolbar').append('<div id="page-bookmark"></div>');
+        if ( qId ) {
+            if ( qId == getBookmarkId() ) {
+                $("#add-favorite").hide();
+                $("#remove-favorite").show();
             }
             else {
-                if ( !$('#question-toolbar #bookmark-button').length ) {
-                    $('#question-toolbar').append('<a class="button" id="bookmark-button" href="#"><img src="img/bookmark_v5.png" /><div>flag</div></a>');
-                }
+                $("#remove-favorite").hide();
+                $("#add-favorite").show();
             }
         }
     },
@@ -137,19 +191,6 @@ var app = {
         SyntaxHighlighter.highlight();
         // show content
         $('#question-content').show();
-        // format checkbox and radio buttons
-        $('li.question-answer input').iCheck({
-            checkboxClass: 'icheckbox_square-blue',
-            radioClass: 'iradio_square-blue',
-            //increaseArea: '20%',
-            labelHover: false,
-            cursor: true
-        });
-        // bind LI for the click
-        $(".question-answer").on("touchstart", function (e) {
-            var aid = $(this).attr('aid');
-            $(this).find('input[id="'+aid+'"]').iCheck('toggle');
-        });
     },
 
     buildQuestions: function(from, stepBack, stepForward) {
@@ -163,7 +204,7 @@ var app = {
         var next = ( ( prev + stepBack + stepForward ) >= app.numQuestions ) ? app.numQuestions : ( prev + stepBack + stepForward );
 
         $("#questions-list").html('');
-        for (var i = 1; i < index.length; i++) {
+        for (var i = 1; i <= next; i++) {
             if ( i && ( i >= prev ) && ( i <= next) ) {
                 qid = app.questionIdFromNumber(i);
                 catId = this.isFirstElement(qid);
@@ -171,9 +212,10 @@ var app = {
                 html += '<li class"question-list-element">' +
                     '<a href="#question" data-question-number="'+i+'" class="question-token">' +
                         'Question '+i+
-                        ((qid == BOOKMARK_ID && (app.mode == MODE_ALL_MINUS_PHP4 || app.mode == MODE_ALL)) ? '<div class="bookmark"></div>' : '') +
                         (localStorage.getItem("PHPEXAM_QUESTION_"+qid) ? '<span class="ui-li-count">DONE</span>' : '') +
-                    '</a></li>';
+                    '</a>' +
+                    ((qid == getBookmarkId()) ? '<a href="#" data-icon="star" data-iconpos="notext" data-inline="true" data-theme="b"></a>' : '') +
+                '</li>';
                 $("#questions-list").append(html).listview( "refresh" );
             }
         }
@@ -224,12 +266,13 @@ var app = {
     },
 
     buildQuestionsPagination: function() {
-        var itemsPerPage = 10
-        var numQuestions = app.numQuestions
-        var num = parseInt($(".question-token:first").attr("data-question-number"))
-        var next = $("#pagination-next")
-        var previous = $("#pagination-previous")
+        var itemsPerPage = 10;
+        var numQuestions = app.numQuestions;
+        var num = parseInt($(".question-token:first").attr("data-question-number"));
+        var next = $("#pagination-next");
+        var previous = $("#pagination-previous");
 
+        // previous and next
         if ((num+itemsPerPage) > numQuestions) {
             next.addClass('ui-disabled')
         }
@@ -242,34 +285,44 @@ var app = {
         else {
             if (previous.hasClass('ui-disabled')) previous.removeClass('ui-disabled')
         }
+        // grid select to choose page
+        var l = Math.floor(numQuestions / 10)
+        for (var i = 0; i <= l; i++) {
+            $('#choose-category-select').find('li[data-option-index="'+i+'"]').show()
+        }
+        for (var j = l+1; j <= 25; j++) {
+            $('#choose-page-select-menu').find('li[data-option-index="'+j+'"]').hide()
+        }
     },
 
     buildBookmarkQuestion: function() {
-        var html = '<span class="no-bookmark">Without bookmark</span>';
-
-        if (BOOKMARK) {
-            html = '<a href="#question" data-question-number="'+BOOKMARK+'" class="slide question-token">Bookmark: <span id="bookmark-question">Question '+BOOKMARK+'</span></a>';
+        var bookmark = $("#bookmark-question-container");
+        var bookmarkLink = $("#bookmark-question");
+        if (getBookmark()) {
+            if (bookmark.hasClass('ui-disabled')) bookmark.removeClass('ui-disabled');
+            bookmarkLink.attr('href','#question');
+            bookmarkLink.html("Bookmark: question " + getBookmark());
         }
-        $("#bookmark-question").html(html);
-
-        // go to bookmark
-        $("#bookmark-question a").on("touchstart", function (e) {
-            var questionNumber = this.getAttribute('data-question-number');
-            app.goToQuestion(questionNumber);
-        });
+        else {
+            bookmark.addClass('ui-disabled');
+            bookmarkLink.attr('href','#');
+            bookmarkLink.html("Without bookmark");
+        }
     },
 
-    setBookmark: function (el) {
-        var qid = $(".question-info").attr('qid');
-        var qNum = app.questionNumberFromId(qid);
+    removeBookmark: function () {
+        setBookmark(undefined, undefined)
+        $("#remove-favorite").hide();
+        $("#add-favorite").show();
+    },
 
-        BOOKMARK = qNum;
-        BOOKMARK_ID = qid;
-        localStorage.setItem('PHPEXAM_BOOKMARK', qNum);
-        localStorage.setItem('PHPEXAM_BOOKMARK_ID', qid);
+    addBookmark: function () {
+        var qid = $(".question-info").attr('qid')
+        var qNum = app.questionNumberFromId(qid)
 
-        el.remove();
-        $('#question-toolbar').append('<div id="page-bookmark"></div>');
+        setBookmark(qNum, qid)
+        $("#add-favorite").hide();
+        $("#remove-favorite").show();
     },
 
     setLastQuestionSeen: function (qnum) {
@@ -384,6 +437,7 @@ var app = {
     },
 
     goToQuestion: function (questionNumber) {
+        $.mobile.loading("show")
         // set question as last seen
         app.setLastQuestionSeen(questionNumber);
         // start loading and show
@@ -398,6 +452,20 @@ var app = {
         app.setQuestionTitle(title, qid);
         app.setQuestionContent(questionContent);
         app.buildQuestionButtons(qindex, questionNumber);
+        // back button: hide question and re-write loading
+        $('#question-toolbar a[data-rel="back"]').on("touchstart", function (e) {
+            app.setQuestionTitle('Loading...');
+            // rebuild questions list
+            var qid = $(".question-info").attr('qid');
+            var qNum = app.questionNumberFromId(qid);
+            app.buildQuestions(qNum);
+            // rebuild bookmark question
+            app.buildBookmarkQuestion();
+        });
+        // hide loader
+        $.mobile.loading("hide");
+        // refresh
+        //refreshPage();
     },
 
     buildQuestionButtons: function(qindex, qNum) {
@@ -405,6 +473,7 @@ var app = {
         var explanation = questionsDataBase[qindex].answer.explanation;
         var links = questionsDataBase[qindex].answer.link;
         if ( !$('#question-content #question-buttons').length ) {
+/*
             $('#question-content').append('<div id="question-buttons">' +
                 '<div id="question-comments" style="display:none;"></div>' +
                 '<a href="#" class="whiteButton" id="resolve-question">Resolve</a>' +
@@ -413,17 +482,23 @@ var app = {
                 ((qNum == 1) ? '' : '<a href="#" class="whiteButton" id="prev-question">Previous</a>') +
                 ((qNum == app.numQuestions) ? '' : '<a href="#" class="whiteButton" id="next-question">Next</a>') +
                 '</div>');
+*/
+            $('#question-content').append('<div id="question-buttons">' +
+                '<div id="question-comments" style="display:none;"></div>' +
+                ' <a href="#" data-role="button" data-mini="true" data-inline="true">Cancel</a>'+
+                ((explanation.length) ? '<a href="#" data-role="button" data-mini="true" id="show-comments">Show explanation</a>' : '') +
+                ((!explanation.length && links.length) ? '<a href="#" data-role="button" data-mini="true" id="show-comments">Show links</a>' : '') +
+                '<div data-role="controlgroup" data-type="horizontal">' +
+                    ((qNum == 1) ? '' : '<a href="#" data-role="button" data-icon="arrow-l" data-iconpos="left" id="prev-question">Previous</a>') +
+                    '<a href="#" data-role="button" data-icon="check" data-iconpos="left" id="resolve-question">Resolve</a>' +
+                    ((qNum == app.numQuestions) ? '' : '<a href="#" data-role="button" data-icon="arrow-r" data-iconpos="right" id="next-question">Next</a>') +
+                '</div>' +
+            '</div>');
             $('#question-content').append(app.buildHelpLink());
         }
-
         // button to resolve question
         $('#resolve-question').on("touchstart", function (e) {
             app.resolveQuestion();
-        });
-
-        // bind bookmark button
-        $('#bookmark-button').on("touchstart", function (e) {
-            app.setBookmark($(this));
         });
 
         // show comments
@@ -562,30 +637,27 @@ var app = {
     },
 
     changeMode: function(questions, mode) {
-        var position = 1;
         index = questions;
         app.numQuestions = index.length;
         app.mode = mode;
 
-        if (mode == MODE_ALL) {
-            $("#bookmark-question").show();
-            $("#include-php4-option").show();
-            position = BOOKMARK;
-        }
-        if (mode == MODE_ALL_MINUS_PHP4) {
-            $("#bookmark-question").show();
-            $("#include-php4-option").show();
-            position = BOOKMARK;
-        }
-        if (mode == MODE_CATEGORY) {
-            $("#bookmark-question").hide();
-            $("#include-php4-option").hide();
-        }
-
+        var position = getBookmark();
         app.buildQuestions(position);
     },
 
     showCategory: function(categoryId) {
         app.changeMode(category[categoryId], MODE_CATEGORY);
     }
+};
+
+function refreshPage() {
+    $.mobile.changePage(
+        window.location.href,
+        {
+            allowSamePageTransition : true,
+            transition              : 'none',
+            showLoadMsg             : false,
+            reloadPage              : true
+        }
+    );
 };

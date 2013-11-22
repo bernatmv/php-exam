@@ -36,6 +36,7 @@
             <li id="submit-question">
                 <a href="mailto:bernatmv@evensoftware.com">Submit new question</a>
             </li>
+<!--
             <li data-role="fieldcontain" class="include-php4-option">
                 <label for="include-php4-option">Include PHP4 questions</label>
                 <select id="include-php4-option" data-role="slider">
@@ -43,10 +44,17 @@
                     <option value="on">ON</option>
                 </select>
             </li>
-            <li data-role="fieldcontain">
-                <label for="choose-category-select" class="select choose-category-select-label">Showing</label>
-                <select id="choose-category-select">
-                    <optgroup label="All questions">
+-->
+            <li>
+                <a href="#question" id="random-question">Random question</a>
+            </li>
+            <li id="bookmark-question-container">
+                <a href="#question" id="bookmark-question">Without bookmark</a>
+            </li>
+            <li data-role="fieldcontain" class="select-questions-container">
+                <select id="choose-category-select" data-native-menu="false" data-corners="false">
+                    <option>Choose questions to display</option>
+                    <optgroup label="General">
                         <option value="0">all questions minus PHP4</option>
                         <option value="1">all questions</option>
                     </optgroup>
@@ -64,12 +72,6 @@
                     </optgroup>
                 </select>
             </li>
-            <li>
-                <a href="#question" id="random-question">Random question</a>
-            </li>
-            <li>
-                <a href="#question" id="bookmark-question">Bookmark question</a>
-            </li>
         </ul>
         <!-- list view -->
         <!-- data-filter="true" data-filter-placeholder="Search question..." -->
@@ -79,7 +81,39 @@
         <div id="questions-pagination">
             <div data-role="controlgroup" data-type="horizontal">
                 <a href="#" data-role="button" data-icon="arrow-l" data-iconpos="left" id="pagination-previous">Previous</a>
-                <a href="#" data-role="button" data-iconpos="notext" data-icon="grid" id="pagination-grid"></a>
+                <select id="choose-page-select" data-native-menu="false" data-corners="false" data-iconpos="notext" data-icon="grid">
+                    <optgroup label="Choose page to display">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                        <option value="24">24</option>
+                        <option value="25">25</option>
+                        <option value="26">26</option>
+                        <option value="27">27</option>
+                        <option value="28">28</option>
+                    </optgroup>
+                </select>
                 <a href="#" data-role="button" data-icon="arrow-r" data-iconpos="right" id="pagination-next">Next</a>
             </div>
         </div>
@@ -93,7 +127,10 @@
 
     <div data-role="header">
         <div data-role="header" style="overflow:hidden;" id="question-toolbar">
-            <h1 id="question-toolbar-title">Question XX</h1>
+            <h1 id="question-toolbar-title">Loading...</h1>
+            <a href="#" data-icon="star" data-iconpos="notext" class="ui-btn-right" class="ui-icon-nodisc" data-inline="true" data-iconshadow="false" id="add-favorite" style="display:none;"></a>
+            <a href="#" data-icon="star" data-iconpos="notext" class="ui-btn-right" class="ui-icon-nodisc" data-inline="true" data-iconshadow="false" id="remove-favorite" style="display:none;" data-theme="b"></a>
+            <!-- data-role="button" data-icon="plus" data-iconpos="notext" -->
         </div>
     </div>
 
