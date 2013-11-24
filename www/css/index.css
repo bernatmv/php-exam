@@ -1,4 +1,8 @@
 
+.none {
+    display: none;
+}
+
 .menu-options {
     margin-bottom: 1em !important;
 }
@@ -76,6 +80,8 @@ a#about {
 .question-text {
     width: 95%;
     text-align: left;
+    clear:both;
+    font-weight: 700;
 }
 
 .question-answer {
@@ -114,7 +120,7 @@ a#about {
 }
 
 #question ul.individual > li {
-    width: 70% !important;
+    width: 100% !important;
     float: none !important;
     display: block !important;
     margin: 5px auto !important;
@@ -153,11 +159,6 @@ a#about {
     border-bottom: none;
 }
 
-.question-hint #hintText {
-    font-size: 1.6em;
-    color: #55c;
-}
-
 .question-text {
     font-size: 1.2em;
     line-height: 1.3em;
@@ -169,14 +170,21 @@ a#about {
 }
 
 .question-answer > .question-hint {
-    width: 150px;
-    height: 30px;
-    line-height: 30px;
+    height: 55px;
     vertical-align: middle;
-    text-align: center;
     float: none;
     margin: 10px auto -20px auto;
-    position: relative;
-    right: 0;
-    top: 0;
+    width: 210px;
+    text-align: center;
+}
+
+.question-hint #hintText {
+    font-size: 1.4em;
+    color: #55f;
+    font-weight:700;
+    display:none;
+}
+
+.answer-nav-button-group {
+    text-align:center;
 }

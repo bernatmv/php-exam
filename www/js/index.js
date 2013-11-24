@@ -466,6 +466,7 @@ var app = {
         $.mobile.loading("hide");
         // refresh
         //refreshPage();
+        $("#question").trigger('create');
     },
 
     buildQuestionButtons: function(qindex, qNum) {
@@ -485,12 +486,11 @@ var app = {
 */
             $('#question-content').append('<div id="question-buttons">' +
                 '<div id="question-comments" style="display:none;"></div>' +
-                ' <a href="#" data-role="button" data-mini="true" data-inline="true">Cancel</a>'+
-                ((explanation.length) ? '<a href="#" data-role="button" data-mini="true" id="show-comments">Show explanation</a>' : '') +
-                ((!explanation.length && links.length) ? '<a href="#" data-role="button" data-mini="true" id="show-comments">Show links</a>' : '') +
-                '<div data-role="controlgroup" data-type="horizontal">' +
+                ((explanation.length) ? '<a href="#" data-role="button" data-mini="true" id="show-comments" data-icon="info" data-corners="false">Show explanation</a>' : '') +
+                ((!explanation.length && links.length) ? '<a href="#" data-role="button" data-mini="true" id="show-comments" data-icon="info" data-corners="false">Show links</a>' : '') +
+                '<div data-role="controlgroup" data-type="horizontal" class="answer-nav-button-group">' +
                     ((qNum == 1) ? '' : '<a href="#" data-role="button" data-icon="arrow-l" data-iconpos="left" id="prev-question">Previous</a>') +
-                    '<a href="#" data-role="button" data-icon="check" data-iconpos="left" id="resolve-question">Resolve</a>' +
+                    '<a href="#" data-role="button" data-icon="check" data-iconpos="left" id="resolve-question" data-theme="b">Resolve</a>' +
                     ((qNum == app.numQuestions) ? '' : '<a href="#" data-role="button" data-icon="arrow-r" data-iconpos="right" id="next-question">Next</a>') +
                 '</div>' +
             '</div>');
@@ -550,9 +550,12 @@ var app = {
         var links = answer.link;
 
         if (links.length > 0) {
-            var html = '<ul id="help-links-container" class="individual none">';
+            var html = '<ul id="help-links-container" class="individual none" style="padding:0;">';
             for (var i = 0, j = links.length; i < j; i++) {
-                html += '<li><a href="#" onclick="var ref = window.open(\''+links[i]+'\', \'_system\'); return false;" class="question-help">'+links[i]+'</a></li>';
+                html += '<li>' +
+                        '<a href="#" onclick="var ref = window.open(\''+links[i]+'\', \'_system\'); return false;" class="question-help" data-role="button" data-mini="true" id="show-comments" data-icon="info" data-corners="false">'+links[i]+'</a>' +
+//                        '<a href="#" onclick="var ref = window.open(\''+links[i]+'\', \'_system\'); return false;" class="question-help">'+links[i]+'</a>' +
+                    '</li>';
             }
             html += '</ul>';
         }
@@ -567,7 +570,12 @@ var app = {
         var id = app.questionIdFromIndex(index);
         var aChoose = (questionsDataBase[index].type != 3) ?
             '' :
-            '<div id="question-'+id+'-answer-note" class="question-answer-note question-hint button"><span id="hintTitle">How many answers?</span><span id="hintText" class="none">Choose '+questionsDataBase[index].answer.correct.length+'</span></div>';
+            '<div data-role="collapsible-set" data-theme="e" data-content-theme="d" data-mini="true">' +
+                '<div data-role="collapsible">' +
+                    '<h3>Hint: how many questions?</h3>' +
+                    '<b>Choose '+questionsDataBase[index].answer.correct.length+'</b>' +
+                '</div>' +
+            '</div>';
         return '<div id="question-{$count}">' +
                 '<div id="question-'+id+'-info" class="question-info" qnum="'+qNum+'" qid="'+id+'" style="display:none;"></div>' +
                 '<div id="question-'+id+'-number" class="question-number"></div>' +
@@ -577,9 +585,7 @@ var app = {
                 '<div id="question-'+id+'-answer" class="question-answer">' +
                     aChoose +
                     '<form id="question-'+id+'-form" onsubmit="return false;">' +
-                        '<ul>' +
-                            app.buildAnswers(qNum) +
-                        '</ul>' +
+                        app.buildAnswers(qNum) +
                     '</form>' +
                 '</div>' +
             '</div>';
@@ -595,31 +601,47 @@ var app = {
         switch (type) {
             case 1:
                 // Open question
+                html += '<label for="'+id+'_1" id="free_form_answer_text"><i>Write response</i></label>' +
+                    '<input type="text" name="answer" id="'+id+'_1" value="">';
+/*
                 html += '<li class="question-answer" aid="'+id+'_1">'+
                     '<input type="text" name="answer" id="'+id+'_1"/>'+
                     '<label for="'+id+'_1" id="free_form_answer_text">&nbsp;<i>Write response</i></label>'+
                     '</li>';
+                    */
                 break;
             case 2:
+                html += '<fieldset data-role="controlgroup">';
                 for (i = 0; i < answer.options.length; i++) {
                     pos = i+1;
                     // Single answer
+                    html += '<input type="radio" name="answer" id="'+id+'_'+pos+'" value="'+pos+'" />' +
+                        '<label for="'+id+'_'+pos+'">'+answer.options[i]+'</label>';
+                    /*
                     html += '<li class="question-answer" aid="'+id+'_'+pos+'">'+
                             '<input type="radio" name="answer" value="'+pos+'" id="'+id+'_'+pos+'"/>'+
                             '<label for="'+id+'_'+pos+'">'+answer.options[i]+'</label>'+
                         '</li>';
+                        */
                 }
+                html += '</fieldset>';
                 break;
             case 3:
+                html += '<fieldset data-role="controlgroup">';
                 for (i = 0; i < answer.options.length; i++) {
                     pos = i+1;
                     // Multiple answer
+                    html += '<input type="checkbox" name="answer[]" id="'+id+'_'+pos+'" value="'+pos+'" />' +
+                        '<label for="'+id+'_'+pos+'">'+answer.options[i]+'</label>';
+                    /*
                     html += '<li class="question-answer" aid="'+id+'_'+pos+'">'+
                             '<input name="answer[]" type="checkbox" value="'+pos+'" id="'+id+'_'+pos+'"/>'+
                             '<label for="'+id+'_'+pos+'">'+answer.options[i]+'</label>'+
                         '</li>';
+                        */
                 }
                 break;
+                html += '</fieldset>';
             default:
                 break;
         }
