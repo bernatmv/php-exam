@@ -279,7 +279,8 @@ var app = {
         else {
             if (next.hasClass('ui-disabled')) next.removeClass('ui-disabled')
         }
-        if ((num-itemsPerPage) < 1) {
+        if (num <= 1) {
+//        if ((num-itemsPerPage) < 1) {
             previous.addClass('ui-disabled')
         }
         else {
@@ -376,8 +377,8 @@ var app = {
         var answer = questionsDataBase[qindex].answer;
 
         $.each($('.question-answer input'), function () {
-            var parent = $(this).parent().parent();
-            var wrap = $(this).parent();
+            var parent = $(this).parent().find('label');
+            var element = $(this);
             // check if the answer is a "TEXT" one
             if (answer.correct[0] && (typeof answer.correct[0] == "string")) {
                 $(this).addClass('noborder');
@@ -399,7 +400,7 @@ var app = {
             }
             // answer is radio or checkbox
             else {
-                if ( wrap.hasClass('checked') ) {
+                if ( $(this).is(':checked') ) {
                     if ( app.isInArray($(this).val(), answer.correct ) ) {
                         if (parent.hasClass('answer-incorrect')) {
                             parent.removeClass('answer-incorrect');
