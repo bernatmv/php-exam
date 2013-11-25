@@ -1,4 +1,3 @@
-// $.mobile.changePage($("#pagequesigui"), "none");
 
 // config data
 var CURRENT_CATEGORY = 1;
@@ -564,7 +563,6 @@ var app = {
             for (var i = 0, j = links.length; i < j; i++) {
                 html += '<li>' +
                         '<a href="#" onclick="var ref = window.open(\''+links[i]+'\', \'_system\'); return false;" class="question-help" data-role="button" data-mini="true" id="show-comments" data-icon="info" data-corners="false">'+links[i]+'</a>' +
-//                        '<a href="#" onclick="var ref = window.open(\''+links[i]+'\', \'_system\'); return false;" class="question-help">'+links[i]+'</a>' +
                     '</li>';
             }
             html += '</ul>';
@@ -613,12 +611,6 @@ var app = {
                 // Open question
                 html += '<label for="'+id+'_1" id="free_form_answer_text"><i>Write response</i></label>' +
                     '<input type="text" name="answer" id="'+id+'_1" value="">';
-/*
-                html += '<li class="question-answer" aid="'+id+'_1">'+
-                    '<input type="text" name="answer" id="'+id+'_1"/>'+
-                    '<label for="'+id+'_1" id="free_form_answer_text">&nbsp;<i>Write response</i></label>'+
-                    '</li>';
-                    */
                 break;
             case 2:
                 html += '<fieldset data-role="controlgroup">';
@@ -627,12 +619,6 @@ var app = {
                     // Single answer
                     html += '<input type="radio" name="answer" id="'+id+'_'+pos+'" value="'+pos+'" />' +
                         '<label for="'+id+'_'+pos+'">'+answer.options[i]+'</label>';
-                    /*
-                    html += '<li class="question-answer" aid="'+id+'_'+pos+'">'+
-                            '<input type="radio" name="answer" value="'+pos+'" id="'+id+'_'+pos+'"/>'+
-                            '<label for="'+id+'_'+pos+'">'+answer.options[i]+'</label>'+
-                        '</li>';
-                        */
                 }
                 html += '</fieldset>';
                 break;
@@ -643,12 +629,6 @@ var app = {
                     // Multiple answer
                     html += '<input type="checkbox" name="answer[]" id="'+id+'_'+pos+'" value="'+pos+'" />' +
                         '<label for="'+id+'_'+pos+'">'+answer.options[i]+'</label>';
-                    /*
-                    html += '<li class="question-answer" aid="'+id+'_'+pos+'">'+
-                            '<input name="answer[]" type="checkbox" value="'+pos+'" id="'+id+'_'+pos+'"/>'+
-                            '<label for="'+id+'_'+pos+'">'+answer.options[i]+'</label>'+
-                        '</li>';
-                        */
                 }
                 break;
                 html += '</fieldset>';
