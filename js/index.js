@@ -104,7 +104,6 @@ var app = {
             $.mobile.defaultPageTransition = 'slide';
             // transitions fallbacks
             $.mobile.transitionFallbacks.slide = "none"
-            $.mobile.transitionFallbacks.slideup = "none"
             // control filtering of questions
             $('#choose-category-select').on('change', function (e) {
                 var filter = $(this).val();
@@ -487,25 +486,18 @@ var app = {
         var explanation = questionsDataBase[qindex].answer.explanation;
         var links = questionsDataBase[qindex].answer.link;
         if ( !$('#question-content #question-buttons').length ) {
-/*
             $('#question-content').append('<div id="question-buttons">' +
                 '<div id="question-comments" style="display:none;"></div>' +
-                '<a href="#" class="whiteButton" id="resolve-question">Resolve</a>' +
-                ((explanation.length) ? '<a href="#" class="whiteButton" id="show-comments">Show explanation</a>' : '') +
-                ((!explanation.length && links.length) ? '<a href="#" class="whiteButton" id="show-comments">Show links</a>' : '') +
-                ((qNum == 1) ? '' : '<a href="#" class="whiteButton" id="prev-question">Previous</a>') +
-                ((qNum == app.numQuestions) ? '' : '<a href="#" class="whiteButton" id="next-question">Next</a>') +
-                '</div>');
-*/
-            $('#question-content').append('<div id="question-buttons">' +
-                '<div id="question-comments" style="display:none;"></div>' +
+                '<br />' +
                 ((explanation.length) ? '<a href="#" data-role="button" data-mini="true" id="show-comments" data-icon="info" data-corners="false">Show explanation</a>' : '') +
                 ((!explanation.length && links.length) ? '<a href="#" data-role="button" data-mini="true" id="show-comments" data-icon="info" data-corners="false">Show links</a>' : '') +
+                '<br />' +
                 '<div data-role="controlgroup" data-type="horizontal" class="answer-nav-button-group">' +
                     ((qNum == 1) ? '' : '<a href="#" data-role="button" data-icon="arrow-l" data-iconpos="left" id="prev-question" data-transition="slide">Prev</a>') +
                     '<a href="#" data-role="button" data-icon="check" data-iconpos="left" id="resolve-question" data-theme="b">Resolve</a>' +
                     ((qNum == app.numQuestions) ? '' : '<a href="#" data-role="button" data-icon="arrow-r" data-iconpos="right" id="next-question" data-transition="slide">Next</a>') +
                 '</div>' +
+                '<br />' +
             '</div>');
             $('#question-content').append(app.buildHelpLink());
         }

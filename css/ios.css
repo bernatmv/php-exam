@@ -1,0 +1,15 @@
+
+a {
+    text-decoration: none !important;
+}
+
+#questions-pagination a#choose-page-select-button {
+    width: 59px !important;
+    height: 38px !important;
+    border-right: 1px solid #ddd !important;
+    border-left: 1px solid #ddd !important;
+}
+
+.ui-li-link-alt .ui-btn-icon-notext .ui-btn-inner .ui-icon {
+    top: 52%;
+}
