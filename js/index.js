@@ -100,6 +100,11 @@ var app = {
     onDeviceReady: function() {
         if (!LOADED) {
             LOADED = true;
+            // default transition
+            $.mobile.defaultPageTransition = 'slide';
+            // transitions fallbacks
+            $.mobile.transitionFallbacks.slide = "none"
+            $.mobile.transitionFallbacks.slideup = "none"
             // control filtering of questions
             $('#choose-category-select').on('change', function (e) {
                 var filter = $(this).val();
@@ -140,14 +145,17 @@ var app = {
 
             // add-remove bookmark
             $("#add-favorite").on("touchstart", function (e) {
+                e.preventDefault();
                 app.addBookmark();
             });
             $("#remove-favorite").on("touchstart", function (e) {
+                e.preventDefault();
                 app.removeBookmark();
             });
 
             // pagination
             $("#pagination-next").on("touchstart", function (e) {
+                e.preventDefault();
                 var itemsPerPage = 10
                 var numQuestions = parseInt(app.numQuestions)
                 var num = parseInt($(".question-token:first").attr("data-question-number"))
@@ -155,6 +163,7 @@ var app = {
                 app.buildQuestions( num, 0, 9 );
             });
             $("#pagination-previous").on("touchstart", function (e) {
+                e.preventDefault();
                 var itemsPerPage = 10;
                 var num = parseInt($(".question-token:first").attr("data-question-number"))
                 num = ((num-itemsPerPage) < 1) ? 1 : (num-itemsPerPage)
@@ -214,11 +223,11 @@ var app = {
                 catId = this.isFirstElement(qid);
                 html = (catId >= 0) ? '<li data-role="list-divider">'+this.getCategoryName(catId)+'</li>' : ((i === prev) ? '<li data-role="list-divider">Viewing questions '+prev+' to '+next+'</li>' : '');
                 html += '<li class"question-list-element">' +
-                    '<a href="#question" data-question-number="'+i+'" class="question-token">' +
+                    '<a href="#question" data-question-number="'+i+'" class="question-token" data-transition="slide">' +
                         'Question '+i+
                         (localStorage.getItem("PHPEXAM_QUESTION_"+qid) ? '<span class="ui-li-count">DONE</span>' : '') +
                     '</a>' +
-                    ((qid == getBookmarkId()) ? '<a href="#" data-icon="star" data-iconpos="notext" data-inline="true" data-theme="b"></a>' : '') +
+                    ((qid == getBookmarkId()) ? '<a href="#" data-icon="star" data-iconpos="notext" data-inline="true" data-theme="b" data-transition="slide"></a>' : '') +
                 '</li>';
                 $("#questions-list").append(html).listview( "refresh" );
             }
@@ -493,20 +502,22 @@ var app = {
                 ((explanation.length) ? '<a href="#" data-role="button" data-mini="true" id="show-comments" data-icon="info" data-corners="false">Show explanation</a>' : '') +
                 ((!explanation.length && links.length) ? '<a href="#" data-role="button" data-mini="true" id="show-comments" data-icon="info" data-corners="false">Show links</a>' : '') +
                 '<div data-role="controlgroup" data-type="horizontal" class="answer-nav-button-group">' +
-                    ((qNum == 1) ? '' : '<a href="#" data-role="button" data-icon="arrow-l" data-iconpos="left" id="prev-question">Prev</a>') +
+                    ((qNum == 1) ? '' : '<a href="#" data-role="button" data-icon="arrow-l" data-iconpos="left" id="prev-question" data-transition="slide">Prev</a>') +
                     '<a href="#" data-role="button" data-icon="check" data-iconpos="left" id="resolve-question" data-theme="b">Resolve</a>' +
-                    ((qNum == app.numQuestions) ? '' : '<a href="#" data-role="button" data-icon="arrow-r" data-iconpos="right" id="next-question">Next</a>') +
+                    ((qNum == app.numQuestions) ? '' : '<a href="#" data-role="button" data-icon="arrow-r" data-iconpos="right" id="next-question" data-transition="slide">Next</a>') +
                 '</div>' +
             '</div>');
             $('#question-content').append(app.buildHelpLink());
         }
         // button to resolve question
         $('#resolve-question').on("touchstart", function (e) {
+            e.preventDefault();
             app.resolveQuestion();
         });
 
         // show comments
         $('#show-comments').on("touchstart", function (e) {
+            e.preventDefault();
             var qid = $(".question-info").attr('qid');
             app.buildComments(qid);
             $(this).remove();
@@ -514,18 +525,21 @@ var app = {
 
         // button to previous question
         $('#prev-question').on("touchstart", function (e) {
+            e.preventDefault();
             var q = parseInt(qNum) -1;
             app.goToQuestion(q);
         });
 
         // button to next question
         $('#next-question').on("touchstart", function (e) {
+            e.preventDefault();
             var q = parseInt(qNum) +1;
             app.goToQuestion(q);
         });
 
         // button to hint number of answers
         $('.question-answer-note').on("touchstart", function (e) {
+            e.preventDefault();
             app.showHint();
         });
     },

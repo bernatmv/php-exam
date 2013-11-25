@@ -26,7 +26,7 @@
     <div data-role="header">
         <div data-role="header" style="overflow:hidden;">
             <h1>PHP Study Quiz</h1>
-            <a href="#about" data-icon="info" class="ui-btn-right">about</a>
+            <a href="#about" data-icon="info" class="ui-btn-right" data-transition="slideup">about</a>
         </div>
     </div>
 
@@ -46,14 +46,14 @@
             </li>
 -->
             <li>
-                <a href="#question" id="random-question">Random question</a>
+                <a href="#question" id="random-question" data-transition="slide">Random question</a>
             </li>
             <li id="bookmark-question-container">
                 <a href="#question" id="bookmark-question">Without bookmark</a>
-                <a class="bookmark-question-star" href="#" data-icon="star" data-iconpos="notext" data-inline="true" data-theme="b"></a>
+                <a class="bookmark-question-star" href="#" data-icon="star" data-iconpos="notext" data-inline="true" data-theme="b" data-transition="slide"></a>
             </li>
             <li data-role="fieldcontain" class="select-questions-container">
-                <select id="choose-category-select" data-native-menu="false" data-corners="false">
+                <select id="choose-category-select" data-native-menu="false" data-corners="false" data-transition="slide">
                     <option>Choose questions to display</option>
                     <optgroup label="General">
                         <option value="0">all questions minus PHP4</option>
@@ -81,8 +81,8 @@
         <!-- pagination -->
         <div id="questions-pagination">
             <div data-role="controlgroup" data-type="horizontal">
-                <a href="#" data-role="button" data-icon="arrow-l" data-iconpos="left" id="pagination-previous">Prev</a>
-                <select id="choose-page-select" data-native-menu="false" data-corners="false" data-iconpos="notext" data-icon="grid">
+                <a href="#" data-role="button" data-icon="arrow-l" data-iconpos="left" id="pagination-previous" data-transition="slide">Prev</a>
+                <select id="choose-page-select" data-native-menu="false" data-corners="false" data-iconpos="notext" data-icon="grid" data-transition="slide">
                     <optgroup label="Choose page">
                         <option value="0">0</option>
                         <option value="1">1</option>
@@ -115,7 +115,7 @@
                         <option value="28">28</option>
                     </optgroup>
                 </select>
-                <a href="#" data-role="button" data-icon="arrow-r" data-iconpos="right" id="pagination-next">Next</a>
+                <a href="#" data-role="button" data-icon="arrow-r" data-iconpos="right" id="pagination-next" data-transition="slide">Next</a>
             </div>
         </div>
     </div>
