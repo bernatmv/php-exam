@@ -6,8 +6,8 @@ a {
 #questions-pagination a#choose-page-select-button {
     width: 59px !important;
     height: 38px !important;
-    border-right: 1px solid #ddd !important;
-    border-left: 1px solid #ddd !important;
+    border-right: 1px solid #e5e5e5 !important;
+    border-left: 1px solid #e5e5e5 !important;
 }
 
 .ui-li-link-alt .ui-btn-icon-notext .ui-btn-inner .ui-icon {
