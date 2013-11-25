@@ -77,6 +77,9 @@ var MODE_CATEGORY = 2; // showing one category
 // version
 var VERSION = "PRO";
 
+// load control
+var LOADED = false;
+
 // app Object
 var app = {
 
@@ -95,79 +98,80 @@ var app = {
     },
 
     onDeviceReady: function() {
-        // control inclusion of PHP4 questions
-/*
-        $('#include-php4-option').on('change', function (e) {
-            if ($(this).val() === "on") app.changeMode(indexNormalizedPHP4, MODE_ALL);
-            else app.changeMode(indexNormalized, MODE_ALL_MINUS_PHP4)
-        });
-*/
-        // control filtering of questions
-        $('#choose-category-select').on('change', function (e) {
-            var filter = $(this).val();
+        if (!LOADED) {
+            LOADED = true;
+            // control filtering of questions
+            $('#choose-category-select').on('change', function (e) {
+                var filter = $(this).val();
 
-            CURRENT_CATEGORY = filter;
-            if (filter == 0) app.changeMode(indexNormalized, MODE_ALL_MINUS_PHP4);
-            if (filter == 1) app.changeMode(indexNormalizedPHP4, MODE_ALL);
-            if (filter >= 20) {
-                var indexCat = filter-20;
-                app.changeMode(category[indexCat], MODE_CATEGORY);
-            }
-        });
+                CURRENT_CATEGORY = filter;
+                if (filter == 0) app.changeMode(indexNormalized, MODE_ALL_MINUS_PHP4);
+                if (filter == 1) app.changeMode(indexNormalizedPHP4, MODE_ALL);
+                if (filter >= 20) {
+                    var indexCat = filter-20;
+                    app.changeMode(category[indexCat], MODE_CATEGORY);
+                }
+            });
 
-        // control filtering of questions
-        $('#choose-page-select').on('change', function (e) {
-            var page = $(this).val();
-            app.buildQuestions( ((page * 10) + 1), 0, 9 );
-        });
+            // control filtering of questions
+            $('#choose-page-select').on('change', function (e) {
+                var page = $(this).val();
+                app.buildQuestions( ((page * 10) + 1), 0, 9 );
+            });
 
-        // build questions links
-        app.buildQuestions(getBookmark());
-        // set bookmark
-        app.buildBookmarkQuestion();
+            // build questions links
+            app.buildQuestions(getBookmark());
+            // set bookmark
+            app.buildBookmarkQuestion();
 
-/*
-        // if we are reloading a question
-        if (window.location.hash) {
-            app.goToQuestion(LAST_QUESTION_SEEN);
+            // random question
+            $("#random-question").on("touchstart", function (e) {
+                var questionNumber = randomFromInterval(1, (index.length -1));
+                app.goToQuestion(questionNumber);
+            });
+
+            // bookmark question
+            $("#bookmark-question-container").on("touchstart", function (e) {
+                var bookmark = getBookmark()
+                if (bookmark) {
+                    app.goToQuestion(bookmark);
+                }
+            });
+
+            // add-remove bookmark
+            $("#add-favorite").on("touchstart", function (e) {
+                app.addBookmark();
+            });
+            $("#remove-favorite").on("touchstart", function (e) {
+                app.removeBookmark();
+            });
+
+            // pagination
+            $("#pagination-next").on("touchstart", function (e) {
+                var itemsPerPage = 10
+                var numQuestions = parseInt(app.numQuestions)
+                var num = parseInt($(".question-token:first").attr("data-question-number"))
+                num = ((num+itemsPerPage) > numQuestions) ? (numQuestions-1) : (num+itemsPerPage)
+                app.buildQuestions( num, 0, 9 );
+            });
+            $("#pagination-previous").on("touchstart", function (e) {
+                var itemsPerPage = 10;
+                var num = parseInt($(".question-token:first").attr("data-question-number"))
+                num = ((num-itemsPerPage) < 1) ? 1 : (num-itemsPerPage)
+                app.buildQuestions( num, 0, 9 )
+            });
+
+            // back button: hide question and re-write loading
+            $('#question-toolbar a[data-rel="back"]').livequery("touchstart", function (e) {
+                app.setQuestionTitle('Loading...');
+                // rebuild questions list
+                var qid = $(".question-info").attr('qid');
+                var qNum = app.questionNumberFromId(qid);
+                app.buildQuestions(qNum);
+                // rebuild bookmark question
+                app.buildBookmarkQuestion();
+            });
         }
-*/
-        // random question
-        $("#random-question").on("touchstart", function (e) {
-            var questionNumber = randomFromInterval(1, (index.length -1));
-            app.goToQuestion(questionNumber);
-        });
-
-        // bookmark question
-        $("#bookmark-question-container").on("touchstart", function (e) {
-            var bookmark = getBookmark()
-            if (bookmark) {
-                app.goToQuestion(bookmark);
-            }
-        });
-
-        // add-remove bookmark
-        $("#add-favorite").on("touchstart", function (e) {
-            app.addBookmark();
-        });
-        $("#remove-favorite").on("touchstart", function (e) {
-            app.removeBookmark();
-        });
-
-        // pagination
-        $("#pagination-next").on("touchstart", function (e) {
-            var itemsPerPage = 10
-            var numQuestions = parseInt(app.numQuestions)
-            var num = parseInt($(".question-token:first").attr("data-question-number"))
-            num = ((num+itemsPerPage) > numQuestions) ? (numQuestions-1) : (num+itemsPerPage)
-            app.buildQuestions( num, 0, 9 );
-        });
-        $("#pagination-previous").on("touchstart", function (e) {
-            var itemsPerPage = 10;
-            var num = parseInt($(".question-token:first").attr("data-question-number"))
-            num = ((num-itemsPerPage) < 1) ? 1 : (num-itemsPerPage)
-            app.buildQuestions( num, 0, 9 )
-        });
     },
 
     setQuestionTitle: function(title, qId) {
@@ -208,7 +212,7 @@ var app = {
             if ( i && ( i >= prev ) && ( i <= next) ) {
                 qid = app.questionIdFromNumber(i);
                 catId = this.isFirstElement(qid);
-                html = (catId >= 0) ? '<li data-role="list-divider">'+this.getCategoryName(catId)+'</li>' : '';
+                html = (catId >= 0) ? '<li data-role="list-divider">'+this.getCategoryName(catId)+'</li>' : ((i === prev) ? '<li data-role="list-divider">Viewing questions '+prev+' to '+next+'</li>' : '');
                 html += '<li class"question-list-element">' +
                     '<a href="#question" data-question-number="'+i+'" class="question-token">' +
                         'Question '+i+
@@ -289,7 +293,7 @@ var app = {
         // grid select to choose page
         var l = Math.floor(numQuestions / 10)
         for (var i = 0; i <= l; i++) {
-            $('#choose-category-select').find('li[data-option-index="'+i+'"]').show()
+            $('#choose-page-select-menu').find('li[data-option-index="'+i+'"]').show()
         }
         for (var j = l+1; j <= 28; j++) {
             $('#choose-page-select-menu').find('li[data-option-index="'+j+'"]').hide()
@@ -302,7 +306,7 @@ var app = {
         if (getBookmark()) {
             if (bookmark.hasClass('ui-disabled')) bookmark.removeClass('ui-disabled');
             bookmarkLink.attr('href','#question');
-            bookmarkLink.html("Bookmark: question " + getBookmark());
+            bookmarkLink.html("Bookmark:&nbsp;&nbsp;Question " + getBookmark());
         }
         else {
             bookmark.addClass('ui-disabled');
@@ -381,21 +385,30 @@ var app = {
             var element = $(this);
             // check if the answer is a "TEXT" one
             if (answer.correct[0] && (typeof answer.correct[0] == "string")) {
-                $(this).addClass('noborder');
+                parent = $(this).parent().parent().find('label');
+                //$(this).parent().addClass('no-border');
                 if ( $(this).val().toUpperCase() == answer.correct[0].toUpperCase() ) {
-                    if (parent.hasClass('answer-incorrect')) {
-                        parent.removeClass('answer-incorrect');
+                    if (parent.hasClass('answer-incorrect-text')) {
+                        parent.removeClass('answer-incorrect-text');
                     }
-                    parent.addClass('answer-correct');
+                    if (element.parent().hasClass('answer-incorrect-input')) {
+                        element.parent().removeClass('answer-incorrect-input');
+                    }
+                    element.parent().addClass('answer-correct-input');
+                    parent.addClass('answer-correct-text');
                     $('#free_form_answer_text').html('Correct!');
                 }
                 else {
-                    if (parent.hasClass('answer-correct')) {
-                        parent.removeClass('answer-correct');
+                    if (parent.hasClass('answer-correct-text')) {
+                        parent.removeClass('answer-correct-text');
                     }
-                    parent.addClass('answer-incorrect');
+                    if (element.parent().hasClass('answer-correct-input')) {
+                        element.parent().removeClass('answer-correct-input');
+                    }
+                    element.parent().addClass('answer-incorrect-input');
+                    parent.addClass('answer-incorrect-text');
                     error = true;
-                    $('#free_form_answer_text').html('Incorrect, correct answer is: '+answer.correct[0]);
+                    $('#free_form_answer_text').html('Incorrect, the correct answer is: <i>'+answer.correct[0]+'</i>');
                 }
             }
             // answer is radio or checkbox
@@ -453,16 +466,6 @@ var app = {
         app.setQuestionTitle(title, qid);
         app.setQuestionContent(questionContent);
         app.buildQuestionButtons(qindex, questionNumber);
-        // back button: hide question and re-write loading
-        $('#question-toolbar a[data-rel="back"]').on("touchstart", function (e) {
-            app.setQuestionTitle('Loading...');
-            // rebuild questions list
-            var qid = $(".question-info").attr('qid');
-            var qNum = app.questionNumberFromId(qid);
-            app.buildQuestions(qNum);
-            // rebuild bookmark question
-            app.buildBookmarkQuestion();
-        });
         // hide loader
         $.mobile.loading("hide");
         // refresh
@@ -490,7 +493,7 @@ var app = {
                 ((explanation.length) ? '<a href="#" data-role="button" data-mini="true" id="show-comments" data-icon="info" data-corners="false">Show explanation</a>' : '') +
                 ((!explanation.length && links.length) ? '<a href="#" data-role="button" data-mini="true" id="show-comments" data-icon="info" data-corners="false">Show links</a>' : '') +
                 '<div data-role="controlgroup" data-type="horizontal" class="answer-nav-button-group">' +
-                    ((qNum == 1) ? '' : '<a href="#" data-role="button" data-icon="arrow-l" data-iconpos="left" id="prev-question">Previous</a>') +
+                    ((qNum == 1) ? '' : '<a href="#" data-role="button" data-icon="arrow-l" data-iconpos="left" id="prev-question">Prev</a>') +
                     '<a href="#" data-role="button" data-icon="check" data-iconpos="left" id="resolve-question" data-theme="b">Resolve</a>' +
                     ((qNum == app.numQuestions) ? '' : '<a href="#" data-role="button" data-icon="arrow-r" data-iconpos="right" id="next-question">Next</a>') +
                 '</div>' +
@@ -585,7 +588,7 @@ var app = {
             '</div>' +
                 '<div id="question-'+id+'-answer" class="question-answer">' +
                     aChoose +
-                    '<form id="question-'+id+'-form" onsubmit="return false;">' +
+                    '<form id="question-'+id+'-form" onsubmit="return false;" class="answers-form">' +
                         app.buildAnswers(qNum) +
                     '</form>' +
                 '</div>' +
@@ -665,7 +668,10 @@ var app = {
         app.mode = mode;
 
         var position = getBookmark();
+        // build questions links
         app.buildQuestions(position);
+        // set bookmark
+        app.buildBookmarkQuestion();
     },
 
     showCategory: function(categoryId) {

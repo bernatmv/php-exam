@@ -31,7 +31,7 @@
 }
 
 #questions-pagination a {
-    width: 130px !important;
+    width: 100px !important;
 }
 
 #questions-pagination a#pagination-grid {
@@ -45,7 +45,7 @@
 
 #questions-pagination a#choose-page-select-button {
     width: 59px !important;
-    height: 39px !important;
+    height: 40px !important;
 }
 
 a#about {
@@ -81,7 +81,7 @@ a#about {
     width: 95%;
     text-align: left;
     clear:both;
-    font-weight: 700;
+    font-weight: 400;
 }
 
 .question-answer {
@@ -199,8 +199,39 @@ a#about {
     background: #FFCCDD !important;
 }
 
+.answer-correct-text {
+    font-weight: 400 !important;
+}
+
+.answer-incorrect-text {
+    font-weight: 400 !important;
+}
+
+.answer-incorrect-text i {
+    font-weight: 400 !important;
+    color: #999 !important;
+    display: block !important;
+}
+
+.answer-correct-input {
+    border: 3px solid #35bb35 !important;
+}
+
+.answer-incorrect-input {
+    border: 3px solid #cc3344 !important;
+}
+
 .question-token > span {
     color: #333 !important;
     padding: 5px 10px !important;
     margin-top: -13px !important;
 }
+
+.answers-form span {
+    font-weight: 400;
+}
+
+.no-border {
+    border: none !important;
+}
+
