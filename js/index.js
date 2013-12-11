@@ -210,18 +210,19 @@ var app = {
         $.mobile.loading("show")
 
         from = from || 1;
-        var html, qid, catId;
+        var qid, catId;
+        var html = '';
         stepBack = typeof stepBack !== "undefined" ? stepBack : 4;
         stepForward = typeof stepForward !== "undefined" ? stepForward : 5;
         var prev = ( ( from - stepBack ) > 0 ) ? (from - stepBack) : 1;
         var next = ( ( prev + stepBack + stepForward ) >= app.numQuestions ) ? app.numQuestions : ( prev + stepBack + stepForward );
 
-        $("#questions-list").html('');
+        //$("#questions-list").html('');
         for (var i = 1; i <= next; i++) {
             if ( i && ( i >= prev ) && ( i <= next) ) {
                 qid = app.questionIdFromNumber(i);
                 catId = this.isFirstElement(qid);
-                html = (catId >= 0) ? '<li data-role="list-divider">'+this.getCategoryName(catId)+'</li>' : ((i === prev) ? '<li data-role="list-divider">Viewing questions '+prev+' to '+next+'</li>' : '');
+                html += (catId >= 0) ? '<li data-role="list-divider">'+this.getCategoryName(catId)+'</li>' : ((i === prev) ? '<li data-role="list-divider">Viewing questions '+prev+' to '+next+'</li>' : '');
                 html += '<li class"question-list-element">' +
                     '<a href="#question" data-question-number="'+i+'" class="question-token" data-transition="slide">' +
                         'Question '+i+
@@ -229,13 +230,14 @@ var app = {
                     '</a>' +
                     ((qid == getBookmarkId()) ? '<a href="#" data-icon="star" data-iconpos="notext" data-inline="true" data-theme="b" data-transition="slide"></a>' : '') +
                 '</li>';
-                $("#questions-list").append(html).listview( "refresh" );
+                //$("#questions-list").append(html).listview( "refresh" );
             }
         }
+        $("#questions-list").html(html).listview( "refresh" );
 
         // write loading, show and load question
-        $('.question-token').on("tap", function (e) {
-            $(this).addClass("ui-btn-down-question");
+        $('.question-token').on("touchstart", function (e) {
+            //$(this).addClass("ui-btn-down-question");
             var questionNumber = this.getAttribute('data-question-number');
             app.goToQuestion(questionNumber);
         });
