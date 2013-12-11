@@ -3358,4 +3358,14 @@ div.ui-slider-switch.ui-mini {
 
 
 
-.ui-btn-down-question{border:1px solid #bbb;background:#d6d6d6;font-weight:700;color:#222;text-shadow:0 1px 0 #fff;background-image:-webkit-gradient(linear,left top,left bottom,from(#d0d0d0),to(#dfdfdf));background-image:-webkit-linear-gradient(#d0d0d0,#dfdfdf);background-image:-moz-linear-gradient(#d0d0d0,#dfdfdf);background-image:-ms-linear-gradient(#d0d0d0,#dfdfdf);background-image:-o-linear-gradient(#d0d0d0,#dfdfdf);background-image:linear-gradient(#d0d0d0,#dfdfdf)}
+.ui-btn-down-question{
+    background:#d6d6d6;
+    font-weight:700;
+    color:#222;
+    background-image:-webkit-gradient(linear,left top,left bottom,from(#d0d0d0),to(#dfdfdf));
+    background-image:-webkit-linear-gradient(#d0d0d0,#dfdfdf);
+    background-image:-moz-linear-gradient(#d0d0d0,#dfdfdf);
+    background-image:-ms-linear-gradient(#d0d0d0,#dfdfdf);
+    background-image:-o-linear-gradient(#d0d0d0,#dfdfdf);
+    background-image:linear-gradient(#d0d0d0,#dfdfdf);
+}

@@ -153,6 +153,7 @@ var app = {
 
             // pagination
             $("#pagination-next").on("tap", function (e) {
+                e.stopImmediatePropagation();
                 e.preventDefault();
                 var itemsPerPage = 10
                 var numQuestions = parseInt(app.numQuestions)
@@ -161,6 +162,7 @@ var app = {
                 app.buildQuestions( num, 0, 9 );
             });
             $("#pagination-previous").on("tap", function (e) {
+                e.stopImmediatePropagation();
                 e.preventDefault();
                 var itemsPerPage = 10;
                 var num = parseInt($(".question-token:first").attr("data-question-number"))
@@ -232,8 +234,8 @@ var app = {
         }
 
         // write loading, show and load question
-        $('.question-token').on("touchstart", function (e) {
-            $(this).addClass("ui-btn-down-question")
+        $('.question-token').on("tap", function (e) {
+            $(this).addClass("ui-btn-down-question");
             var questionNumber = this.getAttribute('data-question-number');
             app.goToQuestion(questionNumber);
         });
