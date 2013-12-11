@@ -233,7 +233,6 @@ var app = {
 
         // write loading, show and load question
         $('.question-token').on("touchstart", function (e) {
-            this.addClass("ui-btn-clicked-manual");
             var questionNumber = this.getAttribute('data-question-number');
             app.goToQuestion(questionNumber);
         });
