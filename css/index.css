@@ -4,7 +4,7 @@
 }
 
 .menu-options {
-    margin-bottom: 1em !important;
+    margin-bottom: 0 !important;
 }
 
 .include-php4-option {
@@ -141,7 +141,6 @@ a#about {
     padding: 5px !important;
     border: 1px solid #333 !important;
     font-size: .7em !important;
-    overflow: hidden !important;
 }
 
 .syntaxhighlighter .toolbar {
