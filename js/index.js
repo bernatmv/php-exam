@@ -152,7 +152,7 @@ var app = {
             });
 
             // pagination
-            $("#pagination-next").on("touchstart", function (e) {
+            $("#pagination-next").on("tap", function (e) {
                 e.preventDefault();
                 var itemsPerPage = 10
                 var numQuestions = parseInt(app.numQuestions)
@@ -160,7 +160,7 @@ var app = {
                 num = ((num+itemsPerPage) > numQuestions) ? (numQuestions-1) : (num+itemsPerPage)
                 app.buildQuestions( num, 0, 9 );
             });
-            $("#pagination-previous").on("touchstart", function (e) {
+            $("#pagination-previous").on("tap", function (e) {
                 e.preventDefault();
                 var itemsPerPage = 10;
                 var num = parseInt($(".question-token:first").attr("data-question-number"))
