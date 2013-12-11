@@ -131,14 +131,14 @@ var app = {
             app.buildBookmarkQuestion();
 
             // random question
-            $("#random-question").on("touchstart", function (e) {
+            $("#random-question").on("tap", function (e) {
                 SHUFFLE_MODE = true;
                 SHUFFLE_STACK = [];
                 app.goToRandomQuestion();
             });
 
             // bookmark question
-            $("#bookmark-question-container").on("touchstart", function (e) {
+            $("#bookmark-question-container").on("tap", function (e) {
                 var bookmark = getBookmark()
                 if (bookmark) {
                     app.goToQuestion(bookmark);
@@ -272,7 +272,7 @@ var app = {
         $("#questions-list").html(html).listview( "refresh" );
 
         // write loading, show and load question
-        $('.question-token').on("touchstart", function (e) {
+        $('.question-token').on("tap", function (e) {
             SHUFFLE_MODE = false;
             //$(this).addClass("ui-btn-down-question");
             var questionNumber = this.getAttribute('data-question-number');
@@ -543,13 +543,13 @@ var app = {
             $('#question-content').append(app.buildHelpLink());
         }
         // button to resolve question
-        $('#resolve-question').on("touchstart", function (e) {
+        $('#resolve-question').on("tap", function (e) {
             e.preventDefault();
             app.resolveQuestion();
         });
 
         // show comments
-        $('#show-comments').on("touchstart", function (e) {
+        $('#show-comments').on("tap", function (e) {
             e.preventDefault();
             var qid = $(".question-info").attr('qid');
             app.buildComments(qid);
@@ -557,7 +557,7 @@ var app = {
         });
 
         // button to previous question
-        $('#prev-question').on("touchstart", function (e) {
+        $('#prev-question').on("tap", function (e) {
             e.preventDefault();
             if (SHUFFLE_MODE) {
                 app.goToRandomQuestion("prev");
@@ -569,7 +569,7 @@ var app = {
         });
 
         // button to next question
-        $('#next-question').on("touchstart", function (e) {
+        $('#next-question').on("tap", function (e) {
             e.preventDefault();
             if (SHUFFLE_MODE) {
                 app.goToRandomQuestion("next");
@@ -581,7 +581,7 @@ var app = {
         });
 
         // button to hint number of answers
-        $('.question-answer-note').on("touchstart", function (e) {
+        $('.question-answer-note').on("tap", function (e) {
             e.preventDefault();
             app.showHint();
         });
