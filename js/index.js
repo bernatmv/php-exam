@@ -31,6 +31,9 @@ var BOOKMARK_ID = {
 };
 var LAST_QUESTION_SEEN = localStorage.getItem("LAST_QUESTION_SEEN") || 1;
 
+var SHUFFLE_MODE = false;
+var SHUFFLE_STACK = [];
+
 function getBookmark() {
     return BOOKMARK['CAT_'+CURRENT_CATEGORY];
 }
@@ -129,8 +132,9 @@ var app = {
 
             // random question
             $("#random-question").on("touchstart", function (e) {
-                var questionNumber = randomFromInterval(1, (index.length -1));
-                app.goToQuestion(questionNumber);
+                SHUFFLE_MODE = true;
+                SHUFFLE_STACK = [];
+                app.goToRandomQuestion();
             });
 
             // bookmark question
@@ -172,20 +176,45 @@ var app = {
 
             // back button: hide question and re-write loading
             $('#question-toolbar a[data-rel="back"]').livequery("touchstart", function (e) {
-                app.setQuestionTitle('Loading...');
-                // rebuild questions list
-                var qid = $(".question-info").attr('qid');
-                var qNum = app.questionNumberFromId(qid);
-                app.buildQuestions(qNum);
-                // rebuild bookmark question
-                app.buildBookmarkQuestion();
+                app.goBack();
             });
         }
+    },
+
+    goToRandomQuestion: function(mode) {
+        mode = mode || "next";
+        var questionNumber = undefined;
+
+        if (mode === "prev") {
+            questionNumber = SHUFFLE_STACK.pop();
+            questionNumber = SHUFFLE_STACK.pop();
+            if (typeof questionNumber === "undefined") {
+                $.mobile.navigate("#main");
+                app.goBack();
+            }
+        }
+        else {
+            questionNumber = randomFromInterval(1, (index.length -1));
+            SHUFFLE_STACK.push(questionNumber);
+        }
+        if (questionNumber) app.goToQuestion(questionNumber);
+    },
+
+    goBack: function() {
+        SHUFFLE_MODE = false;
+        app.setQuestionTitle('Loading...');
+        // rebuild questions list
+        var qid = $(".question-info").attr('qid');
+        var qNum = app.questionNumberFromId(qid);
+        app.buildQuestions(qNum);
+        // rebuild bookmark question
+        app.buildBookmarkQuestion();
     },
 
     setQuestionTitle: function(title, qId) {
         $('#question-toolbar-title').html(title);
 
+        // favorite
         if ( qId ) {
             if ( qId == getBookmarkId() ) {
                 $("#add-favorite").hide();
@@ -195,6 +224,13 @@ var app = {
                 $("#remove-favorite").hide();
                 $("#add-favorite").show();
             }
+        }
+        // shuffle icon
+        if (SHUFFLE_MODE) {
+            if (!$("#shuffle-icon").hasClass("active")) $("#shuffle-icon").addClass("active");
+        }
+        else {
+            if ($("#shuffle-icon").hasClass("active")) $("#shuffle-icon").removeClass("active");
         }
     },
 
@@ -237,6 +273,7 @@ var app = {
 
         // write loading, show and load question
         $('.question-token').on("touchstart", function (e) {
+            SHUFFLE_MODE = false;
             //$(this).addClass("ui-btn-down-question");
             var questionNumber = this.getAttribute('data-question-number');
             app.goToQuestion(questionNumber);
@@ -522,15 +559,25 @@ var app = {
         // button to previous question
         $('#prev-question').on("touchstart", function (e) {
             e.preventDefault();
-            var q = parseInt(qNum) -1;
-            app.goToQuestion(q);
+            if (SHUFFLE_MODE) {
+                app.goToRandomQuestion("prev");
+            }
+            else {
+                var q = parseInt(qNum) -1;
+                app.goToQuestion(q);
+            }
         });
 
         // button to next question
         $('#next-question').on("touchstart", function (e) {
             e.preventDefault();
-            var q = parseInt(qNum) +1;
-            app.goToQuestion(q);
+            if (SHUFFLE_MODE) {
+                app.goToRandomQuestion("next");
+            }
+            else {
+                var q = parseInt(qNum) +1;
+                app.goToQuestion(q);
+            }
         });
 
         // button to hint number of answers

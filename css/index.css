@@ -238,3 +238,20 @@ a#about {
 .ui-footer .ui-btn-right {
     right: 10px;
 }
+
+#shuffle-icon {
+    display: block;
+    position: absolute;
+    right: 45px;
+    top: 8px;
+    width: 25px;
+    height: 25px;
+    background: url("../img/shuffle_24x24_white.png") 0 0 no-repeat;
+    opacity: .25;
+    filter:Alpha(Opacity=25);
+}
+
+#shuffle-icon.active {
+    opacity: 1;
+    filter:Alpha(Opacity=100);
+}
