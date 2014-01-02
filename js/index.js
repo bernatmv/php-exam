@@ -82,33 +82,6 @@ var VERSION = "PRO";
 // load control
 var LOADED = false;
 
-// on unload
-var gaPlugin;
-function goingAway() {
-    gaPlugin.exit(function() {
-        console.debug('Analytics quit');
-    }, function() {
-        console.debug('Analytics error');
-    });
-}
-
-function permissionCallback (button) {
-    if (button === 1) {
-        // init Analytics Plugin
-        gaPlugin.init(function() {
-            console.debug('Analytics start');
-        }, function() {
-            console.debug('Analytics error');
-        }, "UA-46774704-2", 30);
-        // track start page
-        gaPlugin.trackPage( function() {
-            console.debug('Analytics: start-phpquiz.evensoftware.com');
-        }, function() {
-            console.debug('Analytics error: start-phpquiz.evensoftware.com');
-        }, "start-phpquiz.evensoftware.com");
-    }
-}
-
 // app Object
 var app = {
 
@@ -129,9 +102,6 @@ var app = {
     onDeviceReady: function() {
         if (!LOADED) {
             LOADED = true;
-            // Google Analytics Plugin
-            gaPlugin = window.plugins.gaPlugin;
-            navigator.notification.confirm('We would like your permission to collect usage data. No personal or user identifiable data will be collected.', permissionCallback, 'Attention', 'Allow,Deny');
             // default transition
             $.mobile.defaultPageTransition = 'slide';
             // transitions fallbacks
@@ -551,12 +521,6 @@ var app = {
         // refresh
         //refreshPage();
         $("#question").trigger('create');
-        // Analytics
-        gaPlugin.trackPage( function() {
-            console.debug('Analytics: question-'+questionNumber+'-phpquiz.evensoftware.com');
-        }, function() {
-            console.debug('Analytics error: question-'+questionNumber+'-phpquiz.evensoftware.com');
-        }, "question-"+questionNumber+"-phpquiz.evensoftware.com");
     },
 
     buildQuestionButtons: function(qindex, qNum) {
